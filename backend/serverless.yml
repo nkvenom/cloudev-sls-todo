@@ -1,5 +1,5 @@
 service:
-  name: cloudev-lambda-todo
+  name: cloudev-sls-todo
 
 plugins:
   - serverless-webpack
@@ -20,7 +20,7 @@ provider:
   environment:
     TODOS_TABLE: Todos-${self:provider.stage}
     USER_ID_INDEX: UserIdIndex
-    ATTACHMENTS_S3_BUCKET: cd-c4-todos-images-${self:provider.stage}
+    MEDIA_S3_BUCKET: cloudev-todos-media-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
   iamRoleStatements:
     - Effect: Allow
@@ -130,7 +130,7 @@ functions:
         Action:
           - s3:PutObject
           - s3:GetObject
-        Resource: arn:aws:s3:::${self:provider.environment.ATTACHMENTS_S3_BUCKET}/*
+        Resource: arn:aws:s3:::${self:provider.environment.MEDIA_S3_BUCKET}/*
       - Effect: Allow
         Action:
           - xray:PutTraceSegments
@@ -179,7 +179,7 @@ resources:
     AttachmentsBucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: ${self:provider.environment.ATTACHMENTS_S3_BUCKET}
+        BucketName: ${self:provider.environment.MEDIA_S3_BUCKET}
         CorsConfiguration:
           CorsRules:
             -
@@ -206,7 +206,7 @@ resources:
               Effect: Allow
               Principal: '*'
               Action: 's3:GetObject'
-              Resource: 'arn:aws:s3:::${self:provider.environment.ATTACHMENTS_S3_BUCKET}/*'
+              Resource: 'arn:aws:s3:::${self:provider.environment.MEDIA_S3_BUCKET}/*'
         Bucket: !Ref AttachmentsBucket
 
     RequestBodyValidator:

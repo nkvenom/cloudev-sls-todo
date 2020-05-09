@@ -15,7 +15,7 @@ The application should store TODO items, and each TODO item contains the followi
 * `name` (string) - name of a TODO item (e.g. "Change a light bulb")
 * `dueDate` (string) - date and time by which an item should be completed
 * `done` (boolean) - true if an item was completed, false otherwise
-* `attachmentUrl` (string) (optional) - a URL pointing to an image attached to a TODO item
+* `mediaUrl` (string) (optional) - a URL pointing to an image attached to a TODO item
 
 You might also store an id of a user who created a TODO item.
 
@@ -39,7 +39,7 @@ It should return data that looks like this:
       "name": "Buy milk",
       "dueDate": "2019-07-29T20:01:45.424Z",
       "done": false,
-      "attachmentUrl": "http://example.com/image.png"
+      "mediaUrl": "http://example.com/image.png"
     },
     {
       "todoId": "456",
@@ -47,7 +47,7 @@ It should return data that looks like this:
       "name": "Send a letter",
       "dueDate": "2019-07-29T20:01:45.424Z",
       "done": true,
-      "attachmentUrl": "http://example.com/image.png"
+      "mediaUrl": "http://example.com/image.png"
     },
   ]
 }
@@ -63,7 +63,7 @@ It receives a new TODO item to be created in JSON format that looks like this:
   "name": "Buy milk",
   "dueDate": "2019-07-29T20:01:45.424Z",
   "done": false,
-  "attachmentUrl": "http://example.com/image.png"
+  "mediaUrl": "http://example.com/image.png"
 }
 ```
 
@@ -77,7 +77,7 @@ It should return a new TODO item that looks like this:
     "name": "Buy milk",
     "dueDate": "2019-07-29T20:01:45.424Z",
     "done": false,
-    "attachmentUrl": "http://example.com/image.png"
+    "mediaUrl": "http://example.com/image.png"
   }
 }
 ```

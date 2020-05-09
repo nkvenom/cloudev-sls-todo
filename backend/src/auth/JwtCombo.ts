@@ -4,7 +4,7 @@ import { JwtHeader } from 'jsonwebtoken'
 /**
  * Interface representing a JWT token
  */
-export interface Jwt {
+export interface JwtCombo {
   header: JwtHeader
   payload: JwtToken
 }

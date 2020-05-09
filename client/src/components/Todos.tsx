@@ -2,21 +2,12 @@ import dateFormat from 'dateformat'
 import { History } from 'history'
 import update from 'immutability-helper'
 import * as React from 'react'
-import {
-  Button,
-  Checkbox,
-  Divider,
-  Grid,
-  Header,
-  Icon,
-  Input,
-  Image,
-  Loader
-} from 'semantic-ui-react'
-
+import { Button, Checkbox, Divider, Grid, Header, Icon, Image, Input, Loader } from 'semantic-ui-react'
 import { createTodo, deleteTodo, getTodos, patchTodo } from '../api/todos-api'
 import Auth from '../auth/Auth'
 import { Todo } from '../types/Todo'
+import { hasImageExt } from '../utils'
+
 
 interface TodosProps {
   auth: Auth
@@ -26,36 +17,43 @@ interface TodosProps {
 interface TodosState {
   todos: Todo[]
   newTodoName: string
-  loadingTodos: boolean
+  loadingTodos: boolean,
+  isLoading: boolean
 }
 
 export class Todos extends React.PureComponent<TodosProps, TodosState> {
   state: TodosState = {
     todos: [],
     newTodoName: '',
-    loadingTodos: true
-  }
-
-
-  isImage = (fName: string): boolean => {
-    if (!fName) return false
-    if (fName.endsWith('.jpg') || fName.endsWith('.jpeg') || fName.endsWith('.png')) {
-      return true
-    }
-
-    return false
+    loadingTodos: true,
+    isLoading: false
   }
 
   handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ newTodoName: event.target.value })
   }
 
+  handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      this.createTodo(event)
+    }
+  }
+
   onEditButtonClick = (todoId: string) => {
     this.props.history.push(`/todos/${todoId}/edit`)
   }
 
-  onTodoCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
+  onTodoCreate = (event: React.ChangeEvent<HTMLButtonElement>) => {
+    this.createTodo(event)
+  }
+
+  async createTodo(event: any) {
+    const { isLoading } = this.state;
     try {
+      if (isLoading) return;
+      console.log({ isLoading })
+      
+      this.setState({ isLoading: true })
       if (!this.state.newTodoName || !this.state.newTodoName.trim()) {
         alert('Enter some Text in the input box')
 
@@ -68,7 +66,8 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
       })
       this.setState({
         todos: [...this.state.todos, newTodo],
-        newTodoName: ''
+        newTodoName: '',
+        isLoading: false,
       })
     } catch {
       alert('Todo creation failed')
@@ -141,10 +140,12 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
               onClick: this.onTodoCreate
             }}
             fluid
+            loading={this.state.isLoading} 
             actionPosition="left"
             placeholder="To change the world..."
             value={this.state.newTodoName}
             onChange={this.handleNameChange}
+            onKeyDown={this.handleKeyDown}
           />
         </Grid.Column>
         <Grid.Column width={16}>
@@ -191,8 +192,8 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
                 {todo.dueDate}
               </Grid.Column>
               <Grid.Column width={1} floated="right">
-                {todo.attachmentName &&
-                  <a href={todo.attachmentUrl} download={todo.attachmentName}>
+                {todo.mediaFileName &&
+                  <a href={todo.mediaUrl} download={todo.mediaFileName}>
                     <Icon name="attach" />
                   </a>
                 }
@@ -215,8 +216,8 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
                   <Icon name="delete" />
                 </Button>
               </Grid.Column>
-              {todo.attachmentName && (this.isImage(todo.attachmentName) || console.log(this.isImage(todo.attachmentName))) && (
-                <Image src={todo.attachmentUrl} size="small" wrapped />
+              {todo.mediaFileName && hasImageExt(todo.mediaFileName) && (
+                <Image src={todo.mediaUrl} size="small" wrapped />
               )}
               <Grid.Column width={16}>
                 <Divider />

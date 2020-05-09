@@ -31,9 +31,8 @@ sxG3qiU9DC0G
 
 export const handler = async (event: CustomAuthorizerEvent): Promise<CustomAuthorizerResult> => {
   try {
-    logger.info('Authorizing user', { event })
+    logger.info({ event })
     const jwtToken = verifyToken(event.authorizationToken)
-    logger.info('>>>', { jwtToken })
 
     return {
       principalId: jwtToken.sub,
@@ -68,8 +67,9 @@ export const handler = async (event: CustomAuthorizerEvent): Promise<CustomAutho
 }
 
 function verifyToken(authHeader: string): JwtToken {
-  if (!authHeader)
+  if (!authHeader){
     throw new Error('No authentication header')
+  }
 
   if (!authHeader.toLowerCase().startsWith('bearer '))
     throw new Error('Invalid authentication header')

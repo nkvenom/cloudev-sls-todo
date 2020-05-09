@@ -6,7 +6,7 @@ import * as AWSXRay from 'aws-xray-sdk'
 import { createLogger } from '../../utils/logger'
 
 const XAWS = AWSXRay.captureAWS(AWS)
-const bucketName = process.env.ATTACHMENTS_S3_BUCKET
+const bucketName = process.env.MEDIA_S3_BUCKET
 const urlExpiration = process.env.SIGNED_URL_EXPIRATION
 const s3 = new XAWS.S3({
   signatureVersion: 'v4'
@@ -17,12 +17,12 @@ const logger = createLogger('generateUploadUrl')
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   logger.info({ event })
   const todoId = event.pathParameters.todoId
-  const { attachmentName } = JSON.parse(event.body)
+  const { mediaFileName } = JSON.parse(event.body)
   console.log("todoId", todoId)
 
   const uploadUrl = s3.getSignedUrl('putObject', {
     Bucket: bucketName,
-    Key: `${todoId}/${attachmentName}`,
+    Key: `${todoId}/${mediaFileName}`,
     Expires: parseInt(urlExpiration) || 120 // expires units in seconds
   })
 

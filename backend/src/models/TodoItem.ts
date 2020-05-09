@@ -5,6 +5,6 @@ export interface TodoItem {
   name: string
   dueDate: string
   done: boolean
-  attachmentUrl?: string
-  attachmentName?: string
+  mediaUrl?: string
+  mediaFileName?: string
 }

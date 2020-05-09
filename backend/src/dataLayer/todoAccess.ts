@@ -10,7 +10,7 @@ const logger = createLogger('deleteTodo')
 
 const todosTable = process.env.TODOS_TABLE
 const userIdIndex = process.env.USER_ID_INDEX
-const bucketName = process.env.ATTACHMENTS_S3_BUCKET
+const bucketName = process.env.MEDIA_S3_BUCKET
 
 const docClient = createDynamoDBClient();
 
@@ -70,8 +70,8 @@ export async function updateTodo(todoId: string, userId: string, todoItem: TodoI
 
   if (prevTodo.userId !== userId) return;
 
-  if (todoItem.attachmentName) {
-    todoItem.attachmentUrl = `https://${bucketName}.s3.amazonaws.com/${todoId}/${todoItem.attachmentName}`
+  if (todoItem.mediaFileName) {
+    todoItem.mediaUrl = `https://${bucketName}.s3.amazonaws.com/${todoId}/${todoItem.mediaFileName}`
   }
 
   await docClient.put({

@@ -21,15 +21,13 @@ export default class App extends Component<AppProps, AppState> {
   constructor(props: AppProps) {
     super(props)
 
-    this.handleLogin = this.handleLogin.bind(this)
-    this.handleLogout = this.handleLogout.bind(this)
   }
 
-  handleLogin() {
+  handleLogin = () => {
     this.props.auth.login()
   }
 
-  handleLogout() {
+  handleLogout = () => {
     this.props.auth.logout()
   }
 
@@ -68,13 +66,13 @@ export default class App extends Component<AppProps, AppState> {
   logInLogOutButton() {
     if (this.props.auth.isAuthenticated()) {
       return (
-        <Menu.Item name="logout" onClick={this.handleLogout}>
+        <Menu.Item color="blue" name="logout" onClick={this.handleLogout}>
           Log Out
         </Menu.Item>
       )
     } else {
       return (
-        <Menu.Item name="login" onClick={this.handleLogin}>
+        <Menu.Item color="blue" name="login" onClick={this.handleLogin}>
           Log In
         </Menu.Item>
       )
